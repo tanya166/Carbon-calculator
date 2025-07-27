@@ -14,11 +14,23 @@ const UserDashboard = () => {
         setLoading(true);
         setError(null);
         
+        // Enhanced debugging
+        console.log('=== DASHBOARD DEBUG START ===');
+        console.log('Is authenticated:', authUtils.isAuthenticated());
+        console.log('SessionStorage contents:');
+        console.log('- authToken:', sessionStorage.getItem('authToken') ? 'Present' : 'Missing');
+        console.log('- userId:', sessionStorage.getItem('userId'));
+        console.log('- email:', sessionStorage.getItem('email'));
+        console.log('- username:', sessionStorage.getItem('username'));
+        
         const currentUser = authUtils.getCurrentUser();
+        console.log('getCurrentUser() result:', currentUser);
         setUser(currentUser);
-        console.log('Current user:', currentUser);
+        
+        console.log('About to call authUtils.show()...');
         const response = await authUtils.show();
-        console.log('API Response:', response);
+        console.log('API Response from show():', response);
+        console.log('=== DASHBOARD DEBUG END ===');
         
         let calculationsData = [];
         
@@ -34,11 +46,6 @@ const UserDashboard = () => {
         }
         
         console.log('Processed calculations data:', calculationsData);
-        console.log('Number of calculations:', calculationsData.length);
-        calculationsData.forEach((calc, index) => {
-          console.log(`Calculation ${index}:`, calc);
-        });
-        
         setCalculations(calculationsData);
         
       } catch (error) {
@@ -49,6 +56,7 @@ const UserDashboard = () => {
         setLoading(false);
       }
     };
+
     if (authUtils.isAuthenticated()) {
       fetchUserData();
     } else {
@@ -162,8 +170,7 @@ const UserDashboard = () => {
                   </div>
                 )}
                 <div>
-                  <span className="user-email">{user?.email}</span>
-                  <p>User ID: <span className="user-id">{user?.userId || 'Not found'}</span></p>
+                  <span className="user-email">{user?.email || user?.username || 'User'}</span>
                 </div>
               </div>
             </div>
@@ -192,10 +199,11 @@ const UserDashboard = () => {
             fontSize: '0.9rem',
             color: '#666'
           }}>
-            <p><strong>Debug Info:</strong> Found {calculations.length} calculations</p>
-            <p>User ID: {user?.userId || 'Not found'}</p>
+            <p><strong></strong> Found {calculations.length} calculations</p>
             <p>User Email: {user?.email || 'Not found'}</p>
-            <p>Is Authenticated: {authUtils.isAuthenticated() ? 'Yes' : 'No'}</p>
+            {/* <p>User ID: {user?.userId || 'Not found'}</p> */}
+            {/* <p>Is Authenticated: {authUtils.isAuthenticated() ? 'Yes' : 'No'}</p>
+            <p>SessionStorage userId: {sessionStorage.getItem('userId') || 'Not found'}</p> */}
           </div>
 
           <div className="calculations-section">
@@ -219,7 +227,7 @@ const UserDashboard = () => {
                   const formType = calculation.formType || 'Unknown';
                   const carbonFootprint = calculation.carbonFootprint || 0;
                   const submittedAt = calculation.submittedAt || calculation.createdAt;
-                  const calculationId = calculation.id;
+                  const calculationId = calculation.id || index;
 
                   return (
                     <div 

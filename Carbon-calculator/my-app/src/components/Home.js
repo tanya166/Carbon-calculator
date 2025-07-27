@@ -92,9 +92,7 @@ const Home = () => {
             }}>
               Calculate Your Impact
             </button>
-            <button className="cta-button secondary">
-              Learn More
-            </button>
+            
           </div>
         </div>
         <div className="scroll-indicator">

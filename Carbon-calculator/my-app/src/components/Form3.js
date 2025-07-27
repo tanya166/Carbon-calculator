@@ -327,49 +327,43 @@ const Form3 = () => {
         </form>
 
         {showModal && (
-          <div className="car-footprint-modal">
-            <div className="car-footprint-modal-content">
-              <button 
-                className="car-modal-close-x" 
-                onClick={closeModal}
-                aria-label="Close modal"
-              >
-                ×
-              </button>
+          <div className="modal">
+            <div className="modal-content">
+              <button className="close" onClick={closeModal}>&times;</button>
               
-              <h3>Car Carbon Footprint Result</h3>
-              
-              <div className="car-result-highlight">
-                <p>Your vehicle carbon footprint:</p>
-                <p><strong>{carbonFootprint} kg CO2e</strong></p>
-              </div>
+              <div className="inside-content">
+                <div className="modal-icon">🚗</div>
+                <h2 className="result-text">Car Carbon Footprint Result</h2>
+                
+                <div className="result-display">
+                  <p className="result-text1">Your vehicle carbon footprint:</p>
+                  <p className="result-value">{carbonFootprint} kg CO2e</p>
+                  <p className="result-text1">Distance: {distance} {distanceUnit}</p>
+                  {selectedVehicleInfo && (
+                    <p className="result-text1">
+                      Vehicle: {selectedVehicleInfo.data.attributes.vehicle_make} {selectedVehicleInfo.data.attributes.name} ({selectedVehicleInfo.data.attributes.year})
+                    </p>
+                  )}
+                </div>
 
-              <div className="car-result-details">
-                <p><strong>Distance:</strong> {distance} {distanceUnit}</p>
-                {selectedVehicleInfo && (
-                  <p><strong>Vehicle:</strong> {selectedVehicleInfo.data.attributes.vehicle_make} {selectedVehicleInfo.data.attributes.name} ({selectedVehicleInfo.data.attributes.year})</p>
+                <div className="result-text2">
+                  Want to decrease your Carbon footprint? Start carbon offsetting now!
+                </div>
+
+                {isLoggedIn && (
+                  <div className="modal-status success">
+                    <span className="icon">✓</span>
+                    <span>This calculation has been saved to your account</span>
+                  </div>
+                )}
+                
+                {!isLoggedIn && (
+                  <div className="modal-status warning">
+                    <span className="icon">⚠</span>
+                    <span>Login to save your calculations and track progress</span>
+                  </div>
                 )}
               </div>
-
-              <div className="car-cta-message">
-                Want to decrease your Carbon footprint? Start carbon offsetting now!
-              </div>
-
-              {isLoggedIn && (
-                <div className="car-modal-status success">
-                  <span className="car-footprint-icon">✓</span>
-                  <span>This calculation has been saved to your account</span>
-                </div>
-              )}
-              
-              {!isLoggedIn && (
-                <div className="car-modal-status warning">
-                  <span className="car-footprint-icon">⚠</span>
-                  <span>Login to save your calculations and track progress</span>
-                </div>
-              )}
-
-              <button className="car-close-button" onClick={closeModal}>Close</button>
             </div>
           </div>
         )}

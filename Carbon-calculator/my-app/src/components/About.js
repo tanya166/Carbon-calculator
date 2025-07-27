@@ -77,7 +77,7 @@ useEffect(() => {
 const handleSubmit = async (e) => {
   e.preventDefault();
 
-  const token = localStorage.getItem('authToken');
+  const token = sessionStorage.getItem('authToken');
   console.log('Token exists:', !!token);
   console.log('Token value:', token);
   console.log('Token length:', token ? token.length : 0);

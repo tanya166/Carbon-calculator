@@ -162,9 +162,9 @@ form {
   display: flex;
   align-items: center;
   justify-content: center;
-  top: 20%;
-  left: 20%;
-  width: 400px;
+  top: 27%;
+  left: 32%;
+  width: 500px;
   height: auto;
   backdrop-filter: blur(5px);
   background-color: rgba(0, 0, 0, 0.5);
@@ -248,10 +248,10 @@ form {
     width: 100%;
   }
   
-  .modal {
+  /* .modal {
     width: 90%;
     max-width: 400px;
-  }
+  } */
   
   .modal-content {
     width: 100%;

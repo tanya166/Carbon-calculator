@@ -1,6 +1,6 @@
-
 import React, { useState, useEffect } from "react";
 import './Form4.css';
+import { authUtils } from '../utils/auth';
 
 const Form4 = () => {
   const [fuelSourceValue, setFuelSourceValue] = useState('');
@@ -11,15 +11,14 @@ const Form4 = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // Add state to track save status
+  const [saveError, setSaveError] = useState('');
 
   const API_KEY = 'HezNqwNiVlOAVbxVDAUtQg';
   const BASE_URL = 'https://www.carboninterface.com/api/v1';
 
   useEffect(() => {
-    const tokenFromsession = sessionStorage.getItem('authToken');
-    const tokenFromSession = sessionStorage.getItem('authToken');
-    const token = tokenFromsession || tokenFromSession;
-    
+    const token = sessionStorage.getItem('authToken');
     setIsLoggedIn(!!token);
   }, []);
 
@@ -80,39 +79,59 @@ const Form4 = () => {
   };
 
   const saveToDatabase = async (formData, carbonFootprint) => {
-    try {
-      const payload = {
-        formType: 'fuel_combustion',
-        submissionData: formData,
-        carbonFootprint: carbonFootprint
-      };
+  try {
+   
+    const payload = {
+      formType: 'fuel_combustion',
+      submissionData: {
+        fuelSourceType: formData.fuelSourceType,
+        fuelSourceUnit: formData.fuelSourceUnit, 
+        fuelSourceValue: formData.fuelSourceValue,
+        selectedFuelName: formData.selectedFuelName
+      },
+      carbonFootprint: carbonFootprint
+    };
 
-      const tokenFromsession = sessionStorage.getItem('authToken');
-      const tokenFromSession = sessionStorage.getItem('authToken');
-      const token = tokenFromsession || tokenFromSession;
-      
-      const response = await fetch('http://localhost:3000/api/form/submit', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(payload)
-      });
-      
-      const responseData = await response.json();
-      if (response.ok) {
-        console.log('Successfully saved to database');
-        setError('');
-      } else {
-        console.error('Failed to save to database:', responseData);
-        setError('Failed to save to database');
-      }
-    } catch (error) {
-      console.error('Error saving to database:', error);
-      setError('Error saving to database');
+    const token = authUtils.getToken();
+    
+    if (!token) {
+      console.error('No auth token found');
+      setSaveError('Authentication token not found. Please login again.');
+      return false;
     }
-  };
+    
+    console.log('=== FORM4 DATABASE SAVE DEBUG ===');
+    console.log('Payload being sent:', JSON.stringify(payload, null, 2));
+    
+    const response = await fetch('http://localhost:3000/api/form/submit', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(payload)
+    });
+    
+    console.log('Response status:', response.status);
+    
+    const responseData = await response.json();
+    
+    if (response.ok) {
+      console.log('✅ Successfully saved to database');
+      setSaveError('');
+      return true;
+    } else {
+      console.error('❌ Failed to save to database:', responseData);
+      const errorMessage = responseData.message || responseData.error || 'Failed to save to database';
+      setSaveError(`Database save failed: ${errorMessage}`);
+      return false;
+    }
+  } catch (error) {
+    console.error('❌ Error saving to database:', error);
+    setSaveError(`Error saving to database: ${error.message}`);
+    return false;
+  }
+};
 
   const handleCalculate = async (e) => {
     e.preventDefault();
@@ -129,6 +148,7 @@ const Form4 = () => {
 
     setLoading(true);
     setError('');
+    setSaveError(''); // Clear save error
 
     const requestBody = {
       type: 'fuel_combustion',
@@ -164,13 +184,21 @@ const Form4 = () => {
       const finalFootprint = parseFloat(carbonKg.toFixed(2));
       setCarbonFootprint(finalFootprint);
 
+      // Save to database if logged in
       if (isLoggedIn) {
-        await saveToDatabase({
+        const formData = {
           fuelSourceType,
           fuelSourceUnit,
           fuelSourceValue: parseFloat(fuelSourceValue),
           selectedFuelName: fuelOptions.find(fuel => fuel.type === fuelSourceType)?.name || ''
-        }, finalFootprint);
+        };
+        
+        console.log('Attempting to save to database...');
+        const saveSuccess = await saveToDatabase(formData, finalFootprint);
+        
+        if (!saveSuccess) {
+          console.log('Database save failed, but continuing to show modal');
+        }
       }
 
       setShowModal(true);
@@ -192,7 +220,7 @@ const Form4 = () => {
   return (
     <div className='boxx'>
       <div className="text-center mb-8">
-        <h1 className="calc-heading">🔥 Fuel Combustion Carbon Footprint Calculator</h1>
+        <h1 className="calc-heading">🔥 Calculate your carbon footprint for Fuel Combustion</h1>
         <p className="calc-subtitle">Calculate your fuel combustion's environmental impact</p>
       </div>
       {isLoggedIn && (
@@ -306,10 +334,17 @@ const Form4 = () => {
               <div className="result-text2">
                 Want to decrease your Carbon footprint? Start carbon offsetting now!
               </div>
-              {isLoggedIn && (
+              {isLoggedIn && !saveError && (
                 <div className="modal-status success">
                   <span className="icon">✓</span>
                   <span>This calculation has been saved to your account</span>
+                </div>
+              )}
+              
+              {isLoggedIn && saveError && (
+                <div className="modal-status error">
+                  <span className="icon">⚠</span>
+                  <span>{saveError}</span>
                 </div>
               )}
               
