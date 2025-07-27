@@ -55,7 +55,7 @@ const updateUserById = async (req, res) => {
       updateData.password = await User.hashPassword(password);
     }
 
-    const updated = await User.updateById(id, updateData); // returns 1 if updated otherwise 0
+    const updated = await User.updateById(id, updateData); 
     
     if (!updated) {
       return res.status(400).json({ error: "Failed to update user" });
