@@ -1,19 +1,19 @@
-require('dotenv').config(); 
-const mysql = require('mysql'); 
+require('dotenv').config();
+const { Pool } = require('pg');
 
-const db = mysql.createConnection({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
 });
-db.connect((err) => {
+
+// Test connection
+pool.connect((err, client, release) => {
   if (err) {
-    console.error("Connection failed:", err);
+    console.error('Error acquiring client', err.stack);
   } else {
-    console.log("MySQL connected successfully!");
+    console.log('PostgreSQL connected successfully!');
+    release();
   }
 });
 
-module.exports = db;
-
+module.exports = pool;
