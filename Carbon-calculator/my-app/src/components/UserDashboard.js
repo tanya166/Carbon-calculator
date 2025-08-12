@@ -293,12 +293,21 @@ const UserDashboard = () => {
                   console.log(`🔍 Rendering calculation ${index + 1}:`, calculation);
                   
                   try {
+                    // Add the requested debug logs
+                    console.log('DEBUG - calculation object:', calculation);
+                    console.log('DEBUG - carbonFootprint raw value:', calculation.carbonFootprint);
+                    console.log('DEBUG - carbonFootprint type:', typeof calculation.carbonFootprint);
+                    
                     // Handle the data from your Postman response
                     const submissionData = calculation.submissionData || {};
                     const formType = calculation.formType || 'Unknown';
                     
                     // FIXED: Use the robust function to get carbon footprint number
                     const carbonFootprintNumber = getCarbonFootprintValue(calculation.carbonFootprint);
+                    
+                    // Add the additional debug logs for the processed value
+                    console.log('DEBUG - carbonFootprintNumber:', carbonFootprintNumber);
+                    console.log('DEBUG - carbonFootprintNumber type:', typeof carbonFootprintNumber);
                     
                     // Extra safety check
                     const safeCarbonFootprint = typeof carbonFootprintNumber === 'number' && !isNaN(carbonFootprintNumber) ? carbonFootprintNumber : 0;
