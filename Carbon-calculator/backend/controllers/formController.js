@@ -4,17 +4,33 @@ const db = require('../db/connection');
 exports.saveFormSubmission = async (req, res) => {
   try {
     const { formType, submissionData, carbonFootprint } = req.body;
+    
+    // Validate required fields
+    if (!formType || !submissionData) {
+      return res.status(400).json({
+        success: false,
+        message: 'Form type and submission data are required'
+      });
+    }
+
     const newSubmission = new FormSubmission({
       userId: req.user.id, 
       formType,
       submissionData,
-      carbonFootprint
+      carbonFootprint: carbonFootprint || 0
     });
 
     await newSubmission.save();
+    
     res.status(201).json({
       success: true,
-      data: newSubmission
+      message: 'Form submission saved successfully',
+      data: {
+        id: newSubmission.id,
+        formType: newSubmission.formType,
+        carbonFootprint: newSubmission.carbonFootprint,
+        submittedAt: newSubmission.submittedAt
+      }
     });
   } catch (error) {
     console.error('Error saving form submission:', error);
@@ -32,6 +48,7 @@ exports.getUserSubmissions = async (req, res) => {
 
     res.status(200).json({
       success: true,
+      count: submissions.length,
       data: submissions
     });
   } catch (error) {
@@ -47,6 +64,13 @@ exports.getUserSubmissions = async (req, res) => {
 exports.deleteSubmission = async (req, res) => {
   try {
     const { id } = req.params;
+
+    if (!id || isNaN(id)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Valid submission ID is required'
+      });
+    }
 
     const [result] = await db.query(
       'DELETE FROM FormSubmissions WHERE id = ? AND userId = ?',
