@@ -18,11 +18,11 @@ app.use((req, res, next) => {
 app.use(bodyParser.json({ limit: '10mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
 
-// Updated CORS configuration - fixed duplicates
 const allowedOrigins = [
   'http://localhost:3001', 
   'http://localhost:3000', 
   'https://carbon-calculator-five.vercel.app',
+  'https://carbon-calculator-nqiof5s12-tanyas-projects-8b9fe25e.vercel.app', // Add this new URL
   process.env.FRONTEND_URL,
   'https://*.vercel.app',
 ];
