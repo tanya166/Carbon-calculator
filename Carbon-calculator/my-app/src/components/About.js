@@ -33,7 +33,7 @@ useEffect(() => {
     setLoading(true);
     
     try {
-      const response = await axios.get('https://carbon-calculator-production.up.railway.app/api/about');
+     const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/about`);
       console.log('API Response:', response);
       console.log('Response data:', response.data);
       console.log('Response status:', response.status);

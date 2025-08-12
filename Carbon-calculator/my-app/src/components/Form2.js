@@ -29,9 +29,7 @@ const Form2 = () => {
       submissionData: formData,
       carbonFootprint: carbonFootprint
     };  
-    
-    // Updated URL:
-    const response = await fetch('https://carbon-calculator-production.up.railway.app/api/form/submit', {
+ const response = await fetch(`${process.env.REACT_APP_API_URL}/api/form/submit`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

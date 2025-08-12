@@ -1,0 +1,40 @@
+{
+  "files": {
+    "main.css": "/static/css/main.1976c927.css",
+    "main.js": "/static/js/main.e7eedccd.js",
+    "static/js/206.b26d3b06.chunk.js": "/static/js/206.b26d3b06.chunk.js",
+    "static/media/bgi.png": "/static/media/bgi.0604122193df6bb2e897.png",
+    "static/media/signup.png": "/static/media/signup.1b128264f1238800020c.png",
+    "static/media/login.png": "/static/media/login.d7d58773fd439fa74a9c.png",
+    "static/media/fontawesome-webfont.svg?v=4.7.0": "/static/media/fontawesome-webfont.c1e38fd9e0e74ba58f7a.svg",
+    "static/media/fa-solid-900.ttf": "/static/media/fa-solid-900.bacd5de623fb563b961a.ttf",
+    "static/media/img1.png": "/static/media/img1.3af65e68a0bebb105ea7.png",
+    "static/media/me.png": "/static/media/me.26c5d24b3358f708c00b.png",
+    "static/media/two2.png": "/static/media/two2.a1908ef34b2c43fc469e.png",
+    "static/media/one1.png": "/static/media/one1.a094308b8b6c0407e267.png",
+    "static/media/fa-brands-400.ttf": "/static/media/fa-brands-400.60127e352b7a11f7f1bc.ttf",
+    "static/media/pic-2.png": "/static/media/pic-2.ec851f11b400f097c3ec.png",
+    "static/media/mee.png": "/static/media/mee.4113a3504d2ac9b3aa08.png",
+    "static/media/fontawesome-webfont.eot": "/static/media/fontawesome-webfont.8b43027f47b20503057d.eot",
+    "static/media/fontawesome-webfont.ttf?v=4.7.0": "/static/media/fontawesome-webfont.1e59d2330b4c6deb84b3.ttf",
+    "static/media/fa-solid-900.woff2": "/static/media/fa-solid-900.4d986b00ff9ca3828fbd.woff2",
+    "static/media/pic-1.png": "/static/media/pic-1.8f7b5c1323e1118eb6af.png",
+    "static/media/fa-brands-400.woff2": "/static/media/fa-brands-400.455ea818179b4def0c43.woff2",
+    "static/media/fontawesome-webfont.woff?v=4.7.0": "/static/media/fontawesome-webfont.f691f37e57f04c152e23.woff",
+    "static/media/fontawesome-webfont.woff2?v=4.7.0": "/static/media/fontawesome-webfont.20fd1704ea223900efa9.woff2",
+    "static/media/fa-regular-400.ttf": "/static/media/fa-regular-400.eb91f7b948a42799f678.ttf",
+    "static/media/bot.png": "/static/media/bot.ef22f7fc227d59f05abf.png",
+    "static/media/fa-regular-400.woff2": "/static/media/fa-regular-400.21cb8f55d8e0c5b89751.woff2",
+    "static/media/we.png": "/static/media/we.9782bf872187d4ad8399.png",
+    "static/media/support.png": "/static/media/support.484c8e5b8868e285c2a1.png",
+    "static/media/helpp.png": "/static/media/helpp.c7081d7489d07d0a0450.png",
+    "static/media/contact.png": "/static/media/contact.5778487d3ab832b635b5.png",
+    "static/media/fa-v4compatibility.ttf": "/static/media/fa-v4compatibility.c8e090db312b0bea2aa2.ttf",
+    "static/media/fa-v4compatibility.woff2": "/static/media/fa-v4compatibility.cf7f5903d06b79ad60f1.woff2",
+    "index.html": "/index.html"
+  },
+  "entrypoints": [
+    "static/css/main.1976c927.css",
+    "static/js/main.e7eedccd.js"
+  ]
+}
