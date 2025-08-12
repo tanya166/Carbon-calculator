@@ -1,6 +1,6 @@
-// connection.js (mysql version with async/await support)
+// connection.js (mysql2 version with async/await support)
 require('dotenv').config();
-const mysql = require('mysql');
+const mysql = require('mysql2');
 const util = require('util');
 
 // Create connection pool
@@ -25,11 +25,11 @@ pool.getConnection = util.promisify(pool.getConnection);
 (async () => {
   try {
     const conn = await pool.getConnection();
-    console.log('✅ MySQL connected successfully to Railway!');
+    console.log('✅ MySQL2 connected successfully to Railway!');
     console.log(`📊 Connected to database: ${process.env.DB_NAME || 'railway'}`);
     conn.release();
   } catch (err) {
-    console.error('❌ Error connecting to MySQL:', err.message);
+    console.error('❌ Error connecting to MySQL2:', err.message);
     console.error('Connection details:', {
       host: process.env.DB_HOST,
       port: process.env.DB_PORT,
