@@ -12,41 +12,36 @@ class FormSubmission {
     this.updatedAt = data.updatedAt;
   }
 
-
-  static findAll() {
-    return new Promise((resolve, reject) => {
-      db.query('SELECT * FROM FormSubmissions', (err, results) => {
-        if (err) return reject(err);
-        const submissions = results.map(row => new FormSubmission(row));
-        resolve(submissions);
-      });
-    });
+  static async findAll() {
+    try {
+      const [results] = await db.query('SELECT * FROM FormSubmissions');
+      return results.map(row => new FormSubmission(row));
+    } catch (err) {
+      throw err;
+    }
   }
 
-  static findByUserId(userId) {
-    return new Promise((resolve, reject) => {
-      db.query('SELECT * FROM FormSubmissions WHERE userId = ?', [userId], (err, results) => {
-        if (err) return reject(err);
-        const submissions = results.map(row => new FormSubmission(row));
-        resolve(submissions);
-      });
-    });
+  static async findByUserId(userId) {
+    try {
+      const [results] = await db.query('SELECT * FROM FormSubmissions WHERE userId = ?', [userId]);
+      return results.map(row => new FormSubmission(row));
+    } catch (err) {
+      throw err;
+    }
   }
 
- 
-save() {
-    return new Promise((resolve, reject) => {
-      db.query(
+  async save() {
+    try {
+      const [result] = await db.query(
         `INSERT INTO FormSubmissions (userId, formType, submissionData, carbonFootprint)
          VALUES (?, ?, ?, ?)`,
-        [this.userId, this.formType, JSON.stringify(this.submissionData), this.carbonFootprint],
-        (err, result) => {
-          if (err) return reject(err);
-          this.id = result.insertId;
-          resolve(this);
-        }
+        [this.userId, this.formType, JSON.stringify(this.submissionData), this.carbonFootprint]
       );
-    });
+      this.id = result.insertId;
+      return this;
+    } catch (err) {
+      throw err;
+    }
   }
 }
 

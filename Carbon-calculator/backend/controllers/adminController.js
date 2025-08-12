@@ -1,6 +1,5 @@
 const User = require("../models/User");
 
-
 const getAllUsers = async (req, res) => {
   try {
     const result = await User.findAll();
@@ -49,13 +48,12 @@ const updateUserById = async (req, res) => {
     if (username) updateData.username = username;
     if (email) updateData.email = email;
     if (role) updateData.role = role;
-    
 
     if (password) {
       updateData.password = await User.hashPassword(password);
     }
 
-    const updated = await User.updateById(id, updateData); 
+    const updated = await User.updateById(id, updateData);
     
     if (!updated) {
       return res.status(400).json({ error: "Failed to update user" });

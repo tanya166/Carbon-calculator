@@ -1,5 +1,5 @@
 const FormSubmission = require('../models/FormSubmission');
-const db = require('../db/connection'); // use this for raw queries if needed
+const db = require('../db/connection');
 
 exports.saveFormSubmission = async (req, res) => {
   try {
@@ -48,19 +48,17 @@ exports.deleteSubmission = async (req, res) => {
   try {
     const { id } = req.params;
 
-    await new Promise((resolve, reject) => {
-      db.query(
-        'DELETE FROM FormSubmissions WHERE id = ? AND userId = ?',
-        [id, req.user.id],
-        (err, result) => {
-          if (err) return reject(err);
-          if (result.affectedRows === 0) {
-            return reject(new Error('Submission not found or not authorized'));
-          }
-          resolve();
-        }
-      );
-    });
+    const [result] = await db.query(
+      'DELETE FROM FormSubmissions WHERE id = ? AND userId = ?',
+      [id, req.user.id]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'Submission not found or not authorized'
+      });
+    }
 
     res.status(200).json({
       success: true,

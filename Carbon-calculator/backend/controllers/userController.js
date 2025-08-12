@@ -7,8 +7,9 @@ const submitContactForm = async (req, res) => {
   if (!email || !message) {
     return res.status(400).json({ error: "Email and message are required" });
   }
+  
   try {
-    const result=await User.insertInTableContact(email,message);
+    const result = await User.insertInTableContact(email, message);
     res.status(201).json({ message: "Your message has been received!" });
   } catch (error) {
     console.error("Error saving contact message:", error);

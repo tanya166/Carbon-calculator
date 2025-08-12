@@ -20,12 +20,12 @@ const signup = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const result = await User.insertInTable(username,email,hashedPassword);
+    const result = await User.insertInTable(username, email, hashedPassword);
 
     const newUser = await User.findByUsername(username);
 
     const token = jwt.sign(
-      { id: newUser.id, username: newUser.username },// payload(data)
+      { id: newUser.id, username: newUser.username }, // payload(data)
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
@@ -56,12 +56,20 @@ const login = async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
-    const email=await User.getEmailFromUsername(username);
+    
+    const email = await User.getEmailFromUsername(username);
     console.log("Fetched email:", email);
-    res.status(200).json({ token, userId: user.id ,email,username:user.username});
+    
+    res.status(200).json({ 
+      token, 
+      userId: user.id, 
+      email, 
+      username: user.username 
+    });
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
-module.exports={signup,login}
+
+module.exports = { signup, login };

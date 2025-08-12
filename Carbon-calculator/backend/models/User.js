@@ -12,93 +12,80 @@ class User {
     this.updated_at = data.updated_at;
   }
 
-  static findById(id) {
-    return new Promise((resolve, reject) => {
-      db.query('SELECT * FROM users WHERE id = ?', [id], (err, results) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(results.length > 0 ? new User(results[0]) : null);
-        }
-      });
-    });
+  static async findById(id) {
+    try {
+      const [results] = await db.query('SELECT * FROM users WHERE id = ?', [id]);
+      return results.length > 0 ? new User(results[0]) : null;
+    } catch (err) {
+      throw err;
+    }
   }
 
-  static insertInTable(username,email,password){
-    return new Promise((resolve,reject)=>{
-      db.query('INSERT INTO users (username,email,password) VALUES (?,?,?)',[username,email,password],(err,results)=>{
-        if(err){
-          reject(err);
-        }else{
-          resolve(results);
-        }
-      })
-    })
-  }
-  static insertInTableContact(email,message){
-    return new Promise((resolve,reject)=>{
-      db.query('INSERT INTO support (email,message) VALUES (?,?)',[email,message],(err,results)=>{
-        if(err){
-          reject(err);
-        }else{
-          resolve(results);
-        }
-    })
-  })
-}
-
-  static findByUsername(username) {
-    return new Promise((resolve, reject) => {
-      db.query('SELECT * FROM users WHERE username = ?', [username], (err, results) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(results.length > 0 ? new User(results[0]) : null);
-        }
-      });
-    });
+  static async findByIdSafe(id) {
+    try {
+      const [results] = await db.query('SELECT id, username, email, role, created_at FROM users WHERE id = ?', [id]);
+      return results.length > 0 ? results[0] : null;
+    } catch (err) {
+      throw err;
+    }
   }
 
-  static findByEmail(email) {
-    return new Promise((resolve, reject) => {
-      db.query('SELECT * FROM users WHERE email = ?', [email], (err, results) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(results.length > 0 ? new User(results[0]) : null);
-        }
-      });
-    });
+  static async insertInTable(username, email, password) {
+    try {
+      const [results] = await db.query('INSERT INTO users (username, email, password) VALUES (?,?,?)', [username, email, password]);
+      return results;
+    } catch (err) {
+      throw err;
+    }
   }
 
-
-  static findAll() {
-    return new Promise((resolve, reject) => {
-      db.query('SELECT id, username, email, role, created_at FROM users', (err, results) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(results);
-        }
-      });
-    });
+  static async insertInTableContact(email, message) {
+    try {
+      const [results] = await db.query('INSERT INTO support (email, message) VALUES (?,?)', [email, message]);
+      return results;
+    } catch (err) {
+      throw err;
+    }
   }
 
-static getEmailFromUsername(username){
-  return new Promise((resolve,reject)=>{
-    db.query('SELECT email FROM users where username=?',[username],(err,results)=>{
-       if (err) {
-          reject(err);
-        } else {
-         resolve(results.length > 0 ? results[0].email : null);
-        }
-    })
-  })
-}
+  static async findByUsername(username) {
+    try {
+      const [results] = await db.query('SELECT * FROM users WHERE username = ?', [username]);
+      return results.length > 0 ? new User(results[0]) : null;
+    } catch (err) {
+      throw err;
+    }
+  }
 
-  static updateById(id, updateData) {
-    return new Promise((resolve, reject) => {
-  
+  static async findByEmail(email) {
+    try {
+      const [results] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
+      return results.length > 0 ? new User(results[0]) : null;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async findAll() {
+    try {
+      const [results] = await db.query('SELECT id, username, email, role, created_at FROM users');
+      return results;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async getEmailFromUsername(username) {
+    try {
+      const [results] = await db.query('SELECT email FROM users WHERE username=?', [username]);
+      return results.length > 0 ? results[0].email : null;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async updateById(id, updateData) {
+    try {
       const updateFields = [];
       const updateValues = [];
 
@@ -110,57 +97,43 @@ static getEmailFromUsername(username){
       }
 
       if (updateFields.length === 0) {
-        reject(new Error('No fields to update'));
-        return;
+        throw new Error('No fields to update');
       }
 
       updateValues.push(id);
       const query = `UPDATE users SET ${updateFields.join(', ')} WHERE id = ?`;
 
-      db.query(query, updateValues, (err, results) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(results.affectedRows > 0); // returns true if atleast one row changed
-        }
-      });
-    });
+      const [results] = await db.query(query, updateValues);
+      return results.affectedRows > 0;
+    } catch (err) {
+      throw err;
+    }
   }
 
-  static deleteById(id) {
-    return new Promise((resolve, reject) => {
-      db.query('DELETE FROM users WHERE id = ?', [id], (err, results) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(results.affectedRows > 0);
-        }
-      });
-    });
+  static async deleteById(id) {
+    try {
+      const [results] = await db.query('DELETE FROM users WHERE id = ?', [id]);
+      return results.affectedRows > 0;
+    } catch (err) {
+      throw err;
+    }
   }
 
-  static existsById(id) {
-    return new Promise((resolve, reject) => {
-      db.query('SELECT id FROM users WHERE id = ?', [id], (err, results) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(results.length > 0);
-        }
-      });
-    });
+  static async existsById(id) {
+    try {
+      const [results] = await db.query('SELECT id FROM users WHERE id = ?', [id]);
+      return results.length > 0;
+    } catch (err) {
+      throw err;
+    }
   }
 
-  comparePassword(candidatePassword) {
-    return new Promise((resolve, reject) => {
-      bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(isMatch);
-        }
-      });
-    });
+  async comparePassword(candidatePassword) {
+    try {
+      return await bcrypt.compare(candidatePassword, this.password);
+    } catch (err) {
+      throw err;
+    }
   }
 
   toJSON() {
@@ -169,28 +142,25 @@ static getEmailFromUsername(username){
     return userObj;
   }
 
-  static usernameExists(username, excludeId = null) {
-    return new Promise((resolve, reject) => {
+  static async usernameExists(username, excludeId = null) {
+    try {
       let query = 'SELECT id FROM users WHERE username = ?';
-      let params = [username]; // because db.query expects an array of values as params which it will fit as ?
+      let params = [username];
       
       if (excludeId) {
         query += ' AND id != ?';
         params.push(excludeId);
       }
       
-      db.query(query, params, (err, results) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(results.length > 0);
-        }
-      });
-    });
+      const [results] = await db.query(query, params);
+      return results.length > 0;
+    } catch (err) {
+      throw err;
+    }
   }
 
-  static emailExists(email, excludeId = null) {
-    return new Promise((resolve, reject) => {
+  static async emailExists(email, excludeId = null) {
+    try {
       let query = 'SELECT id FROM users WHERE email = ?';
       let params = [email];
       
@@ -199,27 +169,19 @@ static getEmailFromUsername(username){
         params.push(excludeId);
       }
       
-      db.query(query, params, (err, results) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(results.length > 0);
-        }
-      });
-    });
+      const [results] = await db.query(query, params);
+      return results.length > 0;
+    } catch (err) {
+      throw err;
+    }
   }
 
-
-  static hashPassword(password) {
-    return new Promise((resolve, reject) => {
-      bcrypt.hash(password, 10, (err, hashedPassword) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(hashedPassword);
-        }
-      });
-    });
+  static async hashPassword(password) {
+    try {
+      return await bcrypt.hash(password, 10);
+    } catch (err) {
+      throw err;
+    }
   }
 }
 
