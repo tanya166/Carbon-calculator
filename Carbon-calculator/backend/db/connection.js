@@ -11,7 +11,6 @@ const pool = mysql.createPool({
   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
 });
 
-// Test connection
 (async () => {
   try {
     console.log('🔧 Attempting MySQL connection...');
