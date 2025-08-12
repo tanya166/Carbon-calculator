@@ -287,7 +287,7 @@ const UserDashboard = () => {
                         </div>
 
                         <div className="carbon-footprint">
-                          {carbonFootprint.toFixed(2)} kg CO₂e
+                          {Number(carbonFootprint).toFixed(2)} kg CO₂e
                         </div>
 
                         <div className="calculation-details">
@@ -300,7 +300,7 @@ const UserDashboard = () => {
                           
                           <div className="detail-row">
                             <span className="detail-label">Carbon Footprint:</span>
-                            <span className="detail-value">{carbonFootprint.toFixed(2)} kg CO₂e</span>
+                            <span className="detail-value">{Number(carbonFootprint).toFixed(2)} kg CO₂e</span>
                           </div>
                           
                           <div className="detail-row">
