@@ -210,7 +210,7 @@ const UserDashboard = () => {
             </button>
           </div>
 
-          {/* Temporary debug info - you can remove this once it's working */}
+          {/* Debug info - remove this once working */}
           <div style={{ 
             background: '#e8f5e8', 
             padding: '1rem', 
@@ -223,7 +223,6 @@ const UserDashboard = () => {
             <p><strong>Debug Status:</strong></p>
             <p>• Found {Array.isArray(calculations) ? calculations.length : 'invalid'} calculations</p>
             <p>• User: {user?.email || 'Not loaded'}</p>
-            <p>• Auth Status: {authUtils.isAuthenticated() ? 'Authenticated' : 'Not authenticated'}</p>
             <p>• Data Type: {Array.isArray(calculations) ? 'Array' : typeof calculations}</p>
           </div>
 
@@ -257,13 +256,15 @@ const UserDashboard = () => {
                     // Handle the data from your Postman response
                     const submissionData = calculation.submissionData || {};
                     const formType = calculation.formType || 'Unknown';
-                    const carbonFootprint = parseFloat(calculation.carbonFootprint) || 0;
+                    // FIX: Convert string to number FIRST, then use toFixed
+                    const carbonFootprintNumber = Number(calculation.carbonFootprint) || 0;
                     const submittedAt = calculation.submittedAt || calculation.createdAt;
                     const calculationId = calculation.id || index;
 
                     console.log(`Processing calculation ${calculationId}:`, {
                       formType,
-                      carbonFootprint,
+                      carbonFootprintRaw: calculation.carbonFootprint,
+                      carbonFootprintNumber,
                       submissionData,
                       submittedAt
                     });
@@ -287,7 +288,7 @@ const UserDashboard = () => {
                         </div>
 
                         <div className="carbon-footprint">
-                          {Number(carbonFootprint).toFixed(2)} kg CO₂e
+                          {carbonFootprintNumber.toFixed(2)} kg CO₂e
                         </div>
 
                         <div className="calculation-details">
@@ -300,7 +301,7 @@ const UserDashboard = () => {
                           
                           <div className="detail-row">
                             <span className="detail-label">Carbon Footprint:</span>
-                            <span className="detail-value">{Number(carbonFootprint).toFixed(2)} kg CO₂e</span>
+                            <span className="detail-value">{carbonFootprintNumber.toFixed(2)} kg CO₂e</span>
                           </div>
                           
                           <div className="detail-row">
@@ -308,7 +309,7 @@ const UserDashboard = () => {
                             <span className="detail-value">{formatDate(submittedAt)}</span>
                           </div>
 
-                          {/* Render specific fields based on your flight data */}
+                          {/* Flight-specific fields based on your Postman data */}
                           {submissionData.from && (
                             <div className="detail-row">
                               <span className="detail-label">From:</span>
@@ -344,7 +345,7 @@ const UserDashboard = () => {
                             </div>
                           )}
 
-                          {/* Handle electricity data */}
+                          {/* Electricity data */}
                           {submissionData.electricity && (
                             <div className="detail-row">
                               <span className="detail-label">Electricity:</span>
@@ -366,7 +367,7 @@ const UserDashboard = () => {
                             </div>
                           )}
 
-                          {/* Handle car data */}
+                          {/* Car data */}
                           {submissionData.vehicleType && (
                             <div className="detail-row">
                               <span className="detail-label">Vehicle Type:</span>
@@ -381,7 +382,7 @@ const UserDashboard = () => {
                             </div>
                           )}
 
-                          {/* Handle gas/fuel combustion data */}
+                          {/* Gas/fuel combustion data */}
                           {submissionData.gas && (
                             <div className="detail-row">
                               <span className="detail-label">Gas:</span>
@@ -434,19 +435,6 @@ const UserDashboard = () => {
       </div>
     </div>
   );
-
-  const handleDeleteCalculation = async (calculationId) => {
-    if (window.confirm('Are you sure you want to delete this calculation?')) {
-      try {
-        await authUtils.deleteCalculation(calculationId);
-        setCalculations(prev => prev.filter(calc => calc.id !== calculationId));
-        console.log(`✅ Deleted calculation ${calculationId}`);
-      } catch (error) {
-        console.error('Error deleting calculation:', error);
-        setError('Failed to delete calculation');
-      }
-    }
-  };
 };
 
 export default UserDashboard;
