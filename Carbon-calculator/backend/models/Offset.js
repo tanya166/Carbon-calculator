@@ -7,16 +7,14 @@ class Offset {
     this.text2 = data.text2;
   }
 
-  static findAll() {
-    return new Promise((resolve, reject) => {
-      db.query('SELECT * FROM details', (err, results) => {
-        if (err) {
-          return reject(err);
-        }
-        const info = results.map(row => new Offset(row));
-        resolve(info);
-      });
-    });
+  static async findAll() {
+    try {
+      const [results] = await db.query('SELECT * FROM details');
+      const info = results.map(row => new Offset(row));
+      return info;
+    } catch (err) {
+      throw err;
+    }
   }
 }
 

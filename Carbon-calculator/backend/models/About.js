@@ -1,3 +1,4 @@
+
 const db = require('../db/connection');
 
 class About {
@@ -7,16 +8,14 @@ class About {
     this.text_2 = data.text_2;
   }
 
-  static findAll() {
-    return new Promise((resolve, reject) => {
-      db.query('SELECT * FROM information', (err, results) => {
-        if (err) {
-          return reject(err);
-        }
-        const info = results.map(row => new About(row));
-        resolve(info);
-      });
-    });
+  static async findAll() {
+    try {
+      const [results] = await db.query('SELECT * FROM information');
+      const info = results.map(row => new About(row));
+      return info;
+    } catch (err) {
+      throw err;
+    }
   }
 }
 
