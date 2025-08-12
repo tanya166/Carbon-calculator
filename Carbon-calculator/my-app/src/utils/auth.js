@@ -117,16 +117,14 @@ export const authUtils = {
     return sessionStorage.getItem('authToken');
   },
 
-  // FIXED: Remove userId from URL - backend gets it from JWT token
+  // FIXED: Call the correct endpoint without userId parameter
   show: async () => {
     try {
       console.log('=== SHOW METHOD DEBUG START ===');
       
       const token = sessionStorage.getItem('authToken');
-      const userId = sessionStorage.getItem('userId');
       
       console.log('Token present:', !!token);
-      console.log('UserId from session:', userId);
       
       if (!token) {
         console.error('No authToken found in sessionStorage');
