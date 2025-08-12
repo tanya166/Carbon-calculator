@@ -1,40 +1,36 @@
-// connection.js (mysql2 version with async/await support)
 require('dotenv').config();
 const mysql = require('mysql2');
 const util = require('util');
 
-// Create connection pool
 const pool = mysql.createPool({
-  host: process.env.DB_HOST || 'switchyard.proxy.rlwy.net',
-  port: process.env.DB_PORT || 31104,
-  user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME || 'railway',
+  host: process.env.MYSQLHOST || 'switchyard.proxy.rlwy.net',
+  port: process.env.MYSQLPORT ? Number(process.env.MYSQLPORT) : 31104,
+  user: process.env.MYSQLUSER || 'root',
+  password: process.env.MYSQLPASSWORD || '',
+  database: process.env.MYSQLDATABASE || 'railway',
   connectionLimit: 10,
-  acquireTimeout: 60000, // wait up to 60s for a free connection
-  connectTimeout: 60000, // wait up to 60s to connect
-  timezone: 'Z', // UTC timezone
+  acquireTimeout: 60000,
+  connectTimeout: 60000,
+  timezone: 'Z',
   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
 });
 
-// Promisify for async/await
 pool.query = util.promisify(pool.query);
 pool.getConnection = util.promisify(pool.getConnection);
 
-// Test connection
 (async () => {
   try {
     const conn = await pool.getConnection();
     console.log('✅ MySQL2 connected successfully to Railway!');
-    console.log(`📊 Connected to database: ${process.env.DB_NAME || 'railway'}`);
+    console.log(`📊 Connected to database: ${process.env.MYSQLDATABASE || 'railway'}`);
     conn.release();
   } catch (err) {
     console.error('❌ Error connecting to MySQL2:', err.message);
     console.error('Connection details:', {
-      host: process.env.DB_HOST,
-      port: process.env.DB_PORT,
-      user: process.env.DB_USER,
-      database: process.env.DB_NAME
+      host: process.env.MYSQLHOST,
+      port: process.env.MYSQLPORT,
+      user: process.env.MYSQLUSER,
+      database: process.env.MYSQLDATABASE
     });
   }
 })();
