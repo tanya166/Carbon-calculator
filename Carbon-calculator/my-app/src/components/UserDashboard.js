@@ -2,6 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { authUtils } from '../utils/auth';
 import './UserDashboard.css';
 
+// Constants
+const FORM_TYPE_COLORS = {
+  'electricity': '#4facfe',
+  'household': '#4facfe',
+  'flight': '#43e97b',
+  'car': '#f093fb',
+  'fuel combustion': '#ff6b6b',
+  'gas': '#ffa726',
+  'transportation': '#ab47bc'
+};
+
 const UserDashboard = () => {
   const [calculations, setCalculations] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -96,16 +107,45 @@ const UserDashboard = () => {
   };
 
   const getFormTypeColor = (formType) => {
-    const colors = {
-      'electricity': '#4facfe',
-      'household': '#4facfe',
-      'flight': '#43e97b',
-      'car': '#f093fb',
-      'fuel combustion': '#ff6b6b',
-      'gas': '#ffa726',
-      'transportation': '#ab47bc'
-    };
-    return colors[formType?.toLowerCase()] || '#667eea';
+    return FORM_TYPE_COLORS[formType?.toLowerCase()] || '#667eea';
+  };
+
+  // Completely bulletproof function to convert carbon footprint to number
+  const getCarbonFootprintValue = (value) => {
+    console.log('getCarbonFootprintValue input:', value, 'type:', typeof value);
+    
+    // Handle all possible falsy values
+    if (value === null || value === undefined || value === '' || value === 'null' || value === 'undefined') {
+      console.log('Returning 0 for falsy value');
+      return 0;
+    }
+    
+    // If it's already a number
+    if (typeof value === 'number') {
+      const result = isNaN(value) ? 0 : value;
+      console.log('Already number, returning:', result);
+      return result;
+    }
+    
+    // If it's a string, try to parse it
+    if (typeof value === 'string') {
+      const trimmed = value.trim();
+      if (trimmed === '' || trimmed === 'null' || trimmed === 'undefined') {
+        console.log('Empty string, returning 0');
+        return 0;
+      }
+      
+      const parsed = parseFloat(trimmed);
+      const result = isNaN(parsed) ? 0 : parsed;
+      console.log('Parsed string:', trimmed, 'result:', result);
+      return result;
+    }
+    
+    // For any other type, try Number conversion as last resort
+    const converted = Number(value);
+    const result = isNaN(converted) ? 0 : converted;
+    console.log('Number conversion result:', result);
+    return result;
   };
 
   const safeJSONParse = (jsonString) => {
@@ -256,8 +296,13 @@ const UserDashboard = () => {
                     // Handle the data from your Postman response
                     const submissionData = calculation.submissionData || {};
                     const formType = calculation.formType || 'Unknown';
-                    // FIX: Convert string to number FIRST, then use toFixed
-                    const carbonFootprintNumber = Number(calculation.carbonFootprint) || 0;
+                    
+                    // FIXED: Use the robust function to get carbon footprint number
+                    const carbonFootprintNumber = getCarbonFootprintValue(calculation.carbonFootprint);
+                    
+                    // Extra safety check
+                    const safeCarbonFootprint = typeof carbonFootprintNumber === 'number' && !isNaN(carbonFootprintNumber) ? carbonFootprintNumber : 0;
+                    
                     const submittedAt = calculation.submittedAt || calculation.createdAt;
                     const calculationId = calculation.id || index;
 
@@ -288,7 +333,7 @@ const UserDashboard = () => {
                         </div>
 
                         <div className="carbon-footprint">
-                          {carbonFootprintNumber.toFixed(2)} kg CO₂e
+                          {safeCarbonFootprint.toFixed(2)} kg CO₂e
                         </div>
 
                         <div className="calculation-details">
@@ -301,7 +346,7 @@ const UserDashboard = () => {
                           
                           <div className="detail-row">
                             <span className="detail-label">Carbon Footprint:</span>
-                            <span className="detail-value">{carbonFootprintNumber.toFixed(2)} kg CO₂e</span>
+                            <span className="detail-value">{safeCarbonFootprint.toFixed(2)} kg CO₂e</span>
                           </div>
                           
                           <div className="detail-row">
