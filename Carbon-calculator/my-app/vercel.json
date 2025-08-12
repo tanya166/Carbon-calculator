@@ -1,23 +1,16 @@
 {
   "version": 2,
-  "env": {
-    "CI": "false"
-  },
-  "build": {
-    "env": {
-      "CI": "false",
-      "REACT_APP_API_URL": "https://carbon-calculator-production.up.railway.app",
-      "REACT_APP_API_KEY": "HezNqwNiVlOAVbxVDAUtQg",
-      "GENERATE_SOURCEMAP": "false"
-    }
-  },
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/static-build"
-    }
-  ],
+  "buildCommand": "CI=false npm run build",
+  "outputDirectory": "build",
   "routes": [
+    {
+      "src": "/static/(.*)",
+      "dest": "/static/$1"
+    },
+    {
+      "src": "/(favicon.ico|logo192.png|manifest.json)",
+      "dest": "/$1"
+    },
     {
       "src": "/(.*)",
       "dest": "/index.html"
