@@ -33,8 +33,7 @@ useEffect(() => {
     setLoading(true);
     
     try {
-      console.log('Making API call to:', 'http://localhost:3000/api/about');
-      const response = await axios.get('http://localhost:3000/api/about');
+      const response = await axios.get('https://carbon-calculator-production.up.railway.app/api/about');
       console.log('API Response:', response);
       console.log('Response data:', response.data);
       console.log('Response status:', response.status);
@@ -93,7 +92,7 @@ const handleSubmit = async (e) => {
   try {
     console.log('Making request with token:', token.substring(0, 20) + '...');
     
-    const response = await axios.post('http://localhost:3000/api/user/contact', 
+    const response = await axios.post('https://carbon-calculator-production.up.railway.app/api/user/contact', 
       { email, message },
       {
         headers: {

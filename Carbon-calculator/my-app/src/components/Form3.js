@@ -54,37 +54,38 @@ const Form3 = () => {
 
     fetchVehicleMakes();
   }, [API_KEY, BASE_URL]);
-
-  const saveToDatabase = async (formData, carbonFootprint) => {
-    try {
-      const payload = {
-        formType: 'car',
-        submissionData: formData,
-        carbonFootprint: carbonFootprint
-      };  
-      
-      const response = await fetch('http://localhost:3000/api/form/submit', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${authUtils.getToken()}`
-        },
-        body: JSON.stringify(payload)
-      });   
-      
-      const responseData = await response.json();
-      if (response.ok) {
-        console.log('Successfully saved to database');
-        setError(''); 
-      } else {
-        console.error('Failed to save to database:', responseData);
-        setError('Failed to save to database');
-      }
-    } catch (error) {
-      console.error('Error saving to database:', error);
-      setError('Error saving to database');
+const saveToDatabase = async (formData, carbonFootprint) => {
+  try {
+    const payload = {
+      formType: 'car',
+      submissionData: formData,
+      carbonFootprint: carbonFootprint
+    };  
+    
+    // Updated URL:
+    const response = await fetch('https://carbon-calculator-production.up.railway.app/api/form/submit', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${authUtils.getToken()}`
+      },
+      body: JSON.stringify(payload)
+    });   
+    
+    const responseData = await response.json();
+    if (response.ok) {
+      console.log('Successfully saved to database');
+      setError(''); 
+    } else {
+      console.error('Failed to save to database:', responseData);
+      setError('Failed to save to database');
     }
-  };
+  } catch (error) {
+    console.error('Error saving to database:', error);
+    setError('Error saving to database');
+  }
+};
+
 
   const handleMakeChange = async (makeId) => {
     setSelectedMake(makeId);

@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:3000';
+// Updated to use production backend URL
+const API_BASE_URL = 'https://carbon-calculator-production.up.railway.app';
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -26,7 +27,7 @@ apiClient.interceptors.response.use(
       sessionStorage.removeItem('authToken');
       sessionStorage.removeItem('email');
       sessionStorage.removeItem('username');
-      sessionStorage.removeItem('userId'); // FIX: Also remove userId on 401
+      sessionStorage.removeItem('userId');
       window.location.href = '/login';
     }
     return Promise.reject(error);       
@@ -99,7 +100,7 @@ export const authUtils = {
     const token = sessionStorage.getItem('authToken');
     const email = sessionStorage.getItem('email');
     const username = sessionStorage.getItem('username');
-    const userId = sessionStorage.getItem('userId'); // FIX: Also get userId
+    const userId = sessionStorage.getItem('userId');
     
     return { token, email, username, userId };
   },
@@ -119,7 +120,7 @@ export const authUtils = {
   show: async () => {
     try {
       const userId = sessionStorage.getItem('userId');
-      console.log('Retrieved userId for show():', userId); // Debug log
+      console.log('Retrieved userId for show():', userId);
       
       if (!userId) {
         console.error('No userId found in sessionStorage');

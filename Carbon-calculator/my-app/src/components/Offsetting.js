@@ -19,17 +19,17 @@ const Offsetting = () => {
 
   useEffect(() => {
     const fetchPosts = async () => {
-      try {
-        const response = await axios.get('http://localhost:3000/api/details');
-        setPosts(response.data);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching posts:', error);
-        setError(error.message);
-        setLoading(false);
-      }
-    };
-
+  try {
+    // Updated URL:
+    const response = await axios.get('https://carbon-calculator-production.up.railway.app/api/details');
+    setPosts(response.data);
+    setLoading(false);
+  } catch (error) {
+    console.error('Error fetching posts:', error);
+    setError(error.message);
+    setLoading(false);
+  }
+};
     fetchPosts();
   }, []);
 

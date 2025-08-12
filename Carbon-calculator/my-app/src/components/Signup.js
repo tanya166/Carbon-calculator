@@ -10,41 +10,41 @@ function SignUp() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
-
-  const handleSignUp = async (event) => {
-    event.preventDefault();
+const handleSignUp = async (event) => {
+  event.preventDefault();
+  
+  try {
+    // Updated URL:
+    const response = await axios.post('https://carbon-calculator-production.up.railway.app/api/auth/signup', {
+      username,
+      email,
+      password
+    });
     
-    try {
-      const response = await axios.post('http://localhost:3000/api/auth/signup', {
-        username,
-        email,
-        password
-      });
-      
-      if (response.status === 201) {
-        setSuccess(true);
-        setError(null);
-        console.log("Success:", response.data);
-      } else {
-        setError('Unexpected response from server');
-        setSuccess(false);
-        console.log("Unexpected response:", response);
-      }
-    } catch (error) {
-      console.error("Error details:", error);
-      if (error.response) {
-        setError(error.response.data.error || 'An error occurred during sign up');
-        console.log("Error response:", error.response.data);
-      } else if (error.request) {
-        setError('No response from server. Please try again.');
-        console.log("No response received");
-      } else {
-        setError('Error setting up the request. Please try again.');
-        console.log("Error:", error.message);
-      }
+    if (response.status === 201) {
+      setSuccess(true);
+      setError(null);
+      console.log("Success:", response.data);
+    } else {
+      setError('Unexpected response from server');
       setSuccess(false);
+      console.log("Unexpected response:", response);
     }
-  };
+  } catch (error) {
+    console.error("Error details:", error);
+    if (error.response) {
+      setError(error.response.data.error || 'An error occurred during sign up');
+      console.log("Error response:", error.response.data);
+    } else if (error.request) {
+      setError('No response from server. Please try again.');
+      console.log("No response received");
+    } else {
+      setError('Error setting up the request. Please try again.');
+      console.log("Error:", error.message);
+    }
+    setSuccess(false);
+  }
+};
 
   return (
     <div className="yx-portal" style={{ backgroundImage: `url(${signup})` }}>

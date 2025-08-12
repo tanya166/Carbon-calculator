@@ -103,7 +103,8 @@ const Form4 = () => {
     console.log('=== FORM4 DATABASE SAVE DEBUG ===');
     console.log('Payload being sent:', JSON.stringify(payload, null, 2));
     
-    const response = await fetch('http://localhost:3000/api/form/submit', {
+    // Updated URL:
+    const response = await fetch('https://carbon-calculator-production.up.railway.app/api/form/submit', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -132,6 +133,7 @@ const Form4 = () => {
     return false;
   }
 };
+
 
   const handleCalculate = async (e) => {
     e.preventDefault();
