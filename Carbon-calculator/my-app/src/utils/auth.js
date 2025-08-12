@@ -1,5 +1,7 @@
 import axios from 'axios';
+
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://carbon-calculator-production.up.railway.app';
+
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
 });
@@ -21,13 +23,14 @@ apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
+      console.log('🚨 401 Unauthorized - clearing session and redirecting to login');
       sessionStorage.removeItem('authToken');
       sessionStorage.removeItem('email');
       sessionStorage.removeItem('username');
       sessionStorage.removeItem('userId');
       window.location.href = '/login';
     }
-    return Promise.reject(error);       
+    return Promise.reject(error);
   }
 );
 
@@ -114,20 +117,73 @@ export const authUtils = {
     return sessionStorage.getItem('authToken');
   },
 
+  // FIXED: Remove userId from URL - backend gets it from JWT token
   show: async () => {
     try {
+      console.log('=== SHOW METHOD DEBUG START ===');
+      
+      const token = sessionStorage.getItem('authToken');
       const userId = sessionStorage.getItem('userId');
-      console.log('Retrieved userId for show():', userId);
       
-      if (!userId) {
-        console.error('No userId found in sessionStorage');
-        throw new Error('User ID not found. Please log in again.');
+      console.log('Token present:', !!token);
+      console.log('UserId from session:', userId);
+      
+      if (!token) {
+        console.error('No authToken found in sessionStorage');
+        throw new Error('Authentication token not found. Please log in again.');
       }
+
+      // CORRECT: Call /api/form/submissions (no userId in URL)
+      // Backend will get userId from JWT token in Authorization header
+      console.log('Making API call to: /api/form/submissions');
+      const response = await apiClient.get('/api/form/submissions');
       
-      const response = await apiClient.get(`/api/form/submissions/${userId}`);
+      console.log('API Response:', response.data);
+      console.log('=== SHOW METHOD DEBUG END ===');
+      
       return response.data;
     } catch (error) {
       console.error('Error fetching user calculations:', error);
+      
+      // Enhanced error logging
+      if (error.response) {
+        console.error('Response status:', error.response.status);
+        console.error('Response data:', error.response.data);
+      }
+      
+      throw error;
+    }
+  },
+
+  // Optional: Add token verification method
+  verifyToken: async () => {
+    try {
+      const response = await apiClient.get('/api/auth/verify');
+      return response.data;
+    } catch (error) {
+      console.error('Token verification failed:', error);
+      return false;
+    }
+  },
+
+  // Optional: Add method to submit calculations
+  submitCalculation: async (calculationData) => {
+    try {
+      const response = await apiClient.post('/api/form/submit', calculationData);
+      return response.data;
+    } catch (error) {
+      console.error('Error submitting calculation:', error);
+      throw error;
+    }
+  },
+
+  // Optional: Add method to delete calculation
+  deleteCalculation: async (calculationId) => {
+    try {
+      const response = await apiClient.delete(`/api/form/submissions/${calculationId}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error deleting calculation:', error);
       throw error;
     }
   }
