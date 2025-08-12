@@ -122,7 +122,7 @@ const UserDashboard = () => {
     
     // If it's already a number
     if (typeof value === 'number') {
-      const result = isNaN(value) ? 0 : value;
+      const result = isNaN(value) ? 0 : Number(value);
       console.log('Already number, returning:', result);
       return result;
     }
@@ -142,10 +142,15 @@ const UserDashboard = () => {
     }
     
     // For any other type, try Number conversion as last resort
-    const converted = Number(value);
-    const result = isNaN(converted) ? 0 : converted;
-    console.log('Number conversion result:', result);
-    return result;
+    try {
+      const converted = Number(value);
+      const result = isNaN(converted) ? 0 : converted;
+      console.log('Number conversion result:', result);
+      return result;
+    } catch (e) {
+      console.warn('Failed to convert value to number:', value, e);
+      return 0;
+    }
   };
 
   const safeJSONParse = (jsonString) => {
@@ -309,8 +314,11 @@ const UserDashboard = () => {
                     console.log('DEBUG - carbonFootprintNumber:', carbonFootprintNumber);
                     console.log('DEBUG - carbonFootprintNumber type:', typeof carbonFootprintNumber);
                     
-                    // Extra safety check
-                    const safeCarbonFootprint = typeof carbonFootprintNumber === 'number' && !isNaN(carbonFootprintNumber) ? carbonFootprintNumber : 0;
+                    // Extra safety check - ensure it's definitely a number
+                    const safeCarbonFootprint = (typeof carbonFootprintNumber === 'number' && !isNaN(carbonFootprintNumber)) ? carbonFootprintNumber : 0;
+                    
+                    console.log('DEBUG - safeCarbonFootprint:', safeCarbonFootprint);
+                    console.log('DEBUG - safeCarbonFootprint type:', typeof safeCarbonFootprint);
                     
                     const submittedAt = calculation.submittedAt || calculation.createdAt;
                     const calculationId = calculation.id || index;
@@ -342,7 +350,7 @@ const UserDashboard = () => {
                         </div>
 
                         <div className="carbon-footprint">
-                          {safeCarbonFootprint.toFixed(2)} kg CO₂e
+                          {(typeof safeCarbonFootprint === 'number' && !isNaN(safeCarbonFootprint) ? safeCarbonFootprint.toFixed(2) : '0.00')} kg CO₂e
                         </div>
 
                         <div className="calculation-details">
@@ -355,7 +363,7 @@ const UserDashboard = () => {
                           
                           <div className="detail-row">
                             <span className="detail-label">Carbon Footprint:</span>
-                            <span className="detail-value">{safeCarbonFootprint.toFixed(2)} kg CO₂e</span>
+                            <span className="detail-value">{(typeof safeCarbonFootprint === 'number' && !isNaN(safeCarbonFootprint) ? safeCarbonFootprint.toFixed(2) : '0.00')} kg CO₂e</span>
                           </div>
                           
                           <div className="detail-row">
