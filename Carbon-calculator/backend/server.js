@@ -11,28 +11,57 @@ const port = process.env.PORT || 3000;
 // Middlewares
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// Updated CORS configuration
 const allowedOrigins = [
   'http://localhost:3001', 
   'http://localhost:3000', 
-  process.env.FRONTEND_URL, 
-
+  'https://carbon-calculator-five.vercel.app',  // Your Vercel frontend
+  process.env.FRONTEND_URL,                     // From Railway environment variable
+  'https://*.vercel.app',                       // All Vercel preview deployments
 ];
+
+// Remove undefined/null values
+const filteredOrigins = allowedOrigins.filter(origin => origin);
+
+console.log('🌍 CORS enabled for origins:', filteredOrigins);
 
 app.use(cors({
   origin: function (origin, callback) {
-
+    console.log('🔍 Request origin:', origin);
+    
+    // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
     
-    if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV === 'development') {
+    // Check if origin is in allowed list or contains vercel.app
+    const isAllowed = filteredOrigins.some(allowedOrigin => {
+      if (allowedOrigin === origin) return true;
+      if (allowedOrigin === 'https://*.vercel.app' && origin.includes('vercel.app')) return true;
+      return false;
+    });
+    
+    if (isAllowed || process.env.NODE_ENV === 'development') {
+      console.log('✅ CORS allowed for:', origin);
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      console.log('❌ CORS blocked for:', origin);
+      callback(new Error(`Not allowed by CORS: ${origin}`));
     }
   },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: [
+    'Content-Type', 
+    'Authorization', 
+    'X-Requested-With',
+    'Accept',
+    'Origin'
+  ],
+  optionsSuccessStatus: 200 // Some legacy browsers choke on 204
 }));
+
+// Add OPTIONS handler for preflight requests
+app.options('*', cors());
 
 const adminRoutes = require('./Routes/Admin');
 const authRoutes = require('./Routes/auth');
@@ -52,7 +81,8 @@ app.get('/', (req, res) => {
   res.json({ 
     message: 'Carbon Calculator API is running!',
     environment: process.env.NODE_ENV || 'development',
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    allowedOrigins: filteredOrigins
   });
 });
 
@@ -88,7 +118,7 @@ app.use((err, req, res, next) => {
 const server = app.listen(port, '0.0.0.0', () => {
   console.log(`🚀 Server running on port ${port}`);
   console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`📡 CORS enabled for origins: ${allowedOrigins.join(', ')}`);
+  console.log(`📡 CORS enabled for origins: ${filteredOrigins.join(', ')}`);
 });
 
 process.on('SIGTERM', () => {

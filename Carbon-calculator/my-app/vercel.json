@@ -6,9 +6,9 @@
     {
       "src": "/static/(.*)",
       "dest": "/static/$1"
-    },
+},
     {
-      "src": "/(favicon.ico|logo192.png|manifest.json)",
+      "src": "/(favicon.ico|logo192.png|mver.anifest.json)",
       "dest": "/$1"
     },
     {
