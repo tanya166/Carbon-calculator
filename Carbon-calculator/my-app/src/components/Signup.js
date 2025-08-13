@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import './Signup.css';
-import signup from '../assets/signup.png';
 
 function SignUp() {
   const [username, setUsername] = useState('');
@@ -10,6 +9,7 @@ function SignUp() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
+
 const handleSignUp = async (event) => {
   event.preventDefault();
   
@@ -47,7 +47,7 @@ const handleSignUp = async (event) => {
 };
 
   return (
-    <div className="yx-portal" style={{ backgroundImage: `url(${signup})` }}>
+    <div className="yx-portal" style={{ backgroundImage: `url(/assets/signup.png)` }}>
       <div className='yx-box'>
         <h2>Sign up</h2>
         <form onSubmit={handleSignUp}>

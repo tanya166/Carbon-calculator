@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { authUtils } from '../utils/auth';
 import './Login.css';
-import login from '../assets/login.png';
 
 function Login() {
   const [username, setUsername] = useState('');
@@ -50,7 +49,7 @@ function Login() {
   };
 
   return (
-    <div className="zx-portal" style={{ backgroundImage: `url(${login})` }}>
+    <div className="zx-portal" style={{ backgroundImage: `url(/assets/login.png)` }}>
       <div className='zx-box'>
         <h2>Log in</h2>
         <form onSubmit={handleLogin}>

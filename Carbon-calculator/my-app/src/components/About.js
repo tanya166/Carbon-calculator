@@ -2,16 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './About.css';
-import one from '../assets/helpp.png';
-import two from '../assets/we.png';
-import three from '../assets/contact.png';
-import four from '../assets/bot.png';
-import support from '../assets/support.png';
-import contact_us from '../assets/contact_us.png';
-import one1 from '../assets/one1.png';
-import two2 from '../assets/two2.png';
-import me from '../assets/me.png';
-import mee from '../assets/mee.png';
 import Chat from './Chat';
 
 const About = () => {
@@ -132,21 +122,21 @@ const handleSubmit = async (e) => {
         <div className='circles'>
           <div className='deets'>
             <button onClick={() => document.querySelector('.text-part').scrollIntoView({ behavior: 'smooth' })}
-                    className='c1' style={{ backgroundImage: `url(${two})` }}></button>
+                    className='c1' style={{ backgroundImage: `url(/assets/we.png)` }}></button>
             <div className='b-name'>How do we help?</div>
           </div>
           <div className='deets'>
             <button className='c2' onClick={() => document.querySelector('.about-container').scrollIntoView({behavior: 'smooth', block: 'start' })}
-                    style={{ backgroundImage: `url(${one})` }}></button>
+                    style={{ backgroundImage: `url(/assets/helpp.png)` }}></button>
             <div className='b-name'>Who are we?</div>
           </div>
           <div className='deets'>
             <button className='c3' onClick={() => document.querySelector('.c_us').scrollIntoView({ behavior: 'smooth' })}
-                    style={{ backgroundImage: `url(${three})` }}></button>
+                    style={{ backgroundImage: `url(/assets/contact.png)` }}></button>
             <div className='b-name'>Contact us</div>
           </div>
           <div className='deets'>
-            <button className='c4' onClick={handleChatBotClick} style={{ backgroundImage: `url(${four})` }}></button>
+            <button className='c4' onClick={handleChatBotClick} style={{ backgroundImage: `url(/assets/bot.png)` }}></button>
             <div className='b-name'>Chat bot</div>
           </div>
         </div>
@@ -167,15 +157,14 @@ const handleSubmit = async (e) => {
 
   <div className="container11">
     <div className="rectangle11"></div>
-    <img src={one1} className="one1" alt="one1" />
-    <img src={two2} className="two2" alt="two2" />
+    <img src="/assets/one1.png" className="one1" alt="one1" />
+    <img src="/assets/two2.png" className="two2" alt="two2" />
   </div>
 </div>
 
-
 <div className="about-container">
   <div className="about-image">
-    <img src={mee} alt="mee" />
+    <img src="/assets/mee.png" alt="mee" />
   </div>
 
   <div className="about-text">
@@ -189,8 +178,7 @@ const handleSubmit = async (e) => {
   </div>
 </div>
 
-
-      <div className='c_us' style={{ backgroundImage: `url(${contact_us})` }}>
+      <div className='c_us' style={{ backgroundImage: `url(/assets/contact_us.png)` }}>
         <div className='are-a'>
           <div className='Contact-text'>
             <h1 className='us'>Contact us</h1>
@@ -207,7 +195,7 @@ const handleSubmit = async (e) => {
             </div>
             <button type='submit' className='submit-1' onClick={handleSubmit}>Submit</button>
           </div>
-          <img src={support} className='support' alt="support" />
+          <img src="/assets/support.png" className='support' alt="support" />
         </div>
       </div>
 

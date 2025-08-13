@@ -1,12 +1,6 @@
-
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import './Home.css';
-import homee from '../assets/home.png';
-import train from '../assets/train.png';
-import flight from '../assets/flight.png';
-import car from '../assets/car.png';
-import bus from '../assets/bike.png';
 import Form from './Form';
 import Form2 from './Form2';
 import Form3 from './Form3';
@@ -75,7 +69,6 @@ const Home = () => {
 
   return (
     <>
-
       <div className="hero-section">
         <div className="hero-background"></div>
         <div className="hero-content">
@@ -84,7 +77,7 @@ const Home = () => {
             <span className="title-highlight">Together</span>
           </h1>
           <p className="hero-subtitle">
-            Every action counts in t fight against climate change
+            Every action counts in the fight against climate change
           </p>
           <div className="hero-cta">
             <button className="cta-button primary" onClick={() => {
@@ -120,7 +113,7 @@ const Home = () => {
                     <div className={`transport-item ${selectedTransport === 'Form' ? 'selected' : ''}`}
                          onClick={() => { handleImageClick('Form'); handleTransportClick('Form'); }}>
                       <div className="transport-icon">
-                        <img src={homee} className='pic' alt="home" />
+                        <img src="/assets/home.png" className='pic' alt="home" />
                       </div>
                       <span className="transport-label">Home</span>
                     </div>
@@ -128,7 +121,7 @@ const Home = () => {
                     <div className={`transport-item ${selectedTransport === 'Form2' ? 'selected' : ''}`}
                          onClick={() => { handleImageClick('Form2'); handleTransportClick('Form2'); }}>
                       <div className="transport-icon">
-                        <img src={flight} className='pic' alt="flight" />
+                        <img src="/assets/flight.png" className='pic' alt="flight" />
                       </div>
                       <span className="transport-label">Flight</span>
                     </div>
@@ -136,7 +129,7 @@ const Home = () => {
                     <div className={`transport-item ${selectedTransport === 'Form3' ? 'selected' : ''}`}
                          onClick={() => { handleImageClick('Form3'); handleTransportClick('Form3'); }}>
                       <div className="transport-icon">
-                        <img src={car} className='pic' alt="car" />
+                        <img src="/assets/car.png" className='pic' alt="car" />
                       </div>
                       <span className="transport-label">Car</span>
                     </div>
@@ -144,7 +137,7 @@ const Home = () => {
                     <div className={`transport-item ${selectedTransport === 'Form4' ? 'selected' : ''}`}
                          onClick={() => { handleImageClick('Form4'); handleTransportClick('Form4'); }}>
                       <div className="transport-icon">
-                        <img src={bus} className='pic' alt="bike" />
+                        <img src="/assets/bike.png" className='pic' alt="bike" />
                       </div>
                       <span className="transport-label">Bike</span>
                     </div>

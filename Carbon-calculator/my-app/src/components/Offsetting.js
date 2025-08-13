@@ -1,12 +1,7 @@
-
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import './offsetting.css';
 import axios from 'axios';
-import Image1 from '../assets/img1.png'; 
-import Image7 from '../assets/pic-1.png'; 
-import Image8 from '../assets/pic-2.png'; 
-import BackgroundImage from '../assets/bgi.png'; 
 
 const Offsetting = () => {
   const [showFaq1, setShowFaq1] = useState(false);
@@ -52,7 +47,7 @@ const Offsetting = () => {
 
   return (
     <div className="container">
-      <div className="header" style={{ backgroundImage: `url(${BackgroundImage})` }}>
+      <div className="header" style={{ backgroundImage: `url(/assets/bgi.png)` }}>
         <div className="headd">
           <h1 className="title">CARBON</h1>
           <h1 className="blank">OFFSETTING</h1>
@@ -96,7 +91,7 @@ const Offsetting = () => {
                   ))}
                 </div>
               </div>
-              <img src={Image1} className="img1" alt="Carbon Offsetting Concept" />
+              <img src="/assets/img1.png" className="img1" alt="Carbon Offsetting Concept" />
             </div>
             <div className="secondparr">
               <div className="first_text">
@@ -125,7 +120,7 @@ const Offsetting = () => {
                   ))}
                 </div>
               </div>
-              <img src={Image8} className="img2" alt="Why Carbon Offsetting" />
+              <img src="/assets/pic-2.png" className="img2" alt="Why Carbon Offsetting" />
             </div>
             <div className="thirdparr">
               <div className="first_text">
@@ -151,7 +146,7 @@ const Offsetting = () => {
                   ))}
                 </div>
               </div>
-              <img src={Image7} className="img3" alt="How to Offset Carbon" />
+              <img src="/assets/pic-1.png" className="img3" alt="How to Offset Carbon" />
             </div>
           </div>
         </div>
