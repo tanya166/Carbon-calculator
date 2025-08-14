@@ -1,0 +1,6 @@
+# Don't ignore these directories/files
+!public/
+!public/assets/
+!public/assets/*
+!build/
+!build/static/

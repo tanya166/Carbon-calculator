@@ -157,7 +157,8 @@ const handleSubmit = async (e) => {
 
   <div className="container11">
     <div className="rectangle11"></div>
-    <img src="/assets/one1.png" className="one1" alt="one1" />
+    {/* testing */}
+    <img src="https://picsum.photos/150/150?random=1" className="one1" alt="one1" />
     <img src="/assets/two2.png" className="two2" alt="two2" />
   </div>
 </div>
